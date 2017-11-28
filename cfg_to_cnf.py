@@ -1,4 +1,5 @@
 import csv
+import re
 
 class converter():
     """docstring for converter."""
@@ -37,37 +38,40 @@ class converter():
                     #print(terminals)
                     key_with_e = k
                     grammar[k] = terminals
-            print("key_with_e")
-            print(key_with_e)
+            #print("key_with_e")
+            #print(key_with_e)
             for key in grammar.keys():
-                print("key")
-                print(key)
+                #print("key")
+                #print(key)
                 if(key_with_e != key):
                     terminals = grammar.get(key)[:]
                     new_terminals = grammar.get(key)[:]
                     for term in terminals:
                         if key_with_e in term:
-                            print("term:")
-                            print(term)
-                            print("term k count:")
-                            print(term.count(key_with_e))
-                            for x in range(term.count(key_with_e)):
-                                new_term = term.replace(key_with_e, '', x+1)
+                            #print("term:")
+                            #print(term)
+                            #print("term k count:")
+                            #print(term.count(key_with_e))
+                            new_term = term.replace(key_with_e, '')
+                            if new_term not in new_terminals and term.count(key_with_e) > 1:
+                                new_terminals.append(new_term)
+                            for m in re.finditer(key_with_e, term):
+                                new_term = term[:m.start()] + term[m.start()+1:]
                                 if new_term == '':
                                     new_term = 'e'
-                                print("new term: ")
-                                print(new_term)
-                                print(new_terminals)
+                                #print("new term: ")
+                                #print(new_term)
+                                #print(new_terminals)
                                 new_terminals.append(new_term)
-                                print(new_terminals)
+                                #print(new_terminals)
                             terminals.remove(term)
-                            print(grammar)
+                            #print(grammar)
                             grammar[key] = new_terminals
-                            print(grammar)
+                            #print(grammar)
             self.premoteEps(grammar)
-        print(grammar)
+        #print(grammar)
         if( not e_present):
-            print(grammar)
+            #print(grammar)
             self.ruleToRule(grammar)
 
 
