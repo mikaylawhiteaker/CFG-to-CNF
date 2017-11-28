@@ -72,12 +72,24 @@ class converter():
         #print(grammar)
         if( not e_present):
             #print(grammar)
-            self.ruleToRule(grammar)
+            self.removeRuleToRule(grammar)
 
 
-    def ruleToRule(self, grammar):
+    def removeRuletoRule(self, grammar):
+        # S-> S
+
+        self.copyToNewStart(grammar)
+
+    def copyToNewStart(self, grammar):
+        
+
+    def ruleToRuleToTerm(self, grammar):
         print("int rule to rule")
         print(grammar)
+        for key in grammar.keys():
+            for term in grammar.get(key):
+                if(len(term) == 1):
+                    if()
 
 
 test = converter()
