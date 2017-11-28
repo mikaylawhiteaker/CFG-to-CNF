@@ -41,6 +41,7 @@ class converter():
                     #print(terminals)
                     key_with_e = k
                     grammar[k] = terminals
+                    #print(grammar[k])
             #print("key_with_e")
             #print(key_with_e)
             for key in grammar.keys():
@@ -75,18 +76,24 @@ class converter():
         #print(grammar)
         if( not e_present):
             #print(grammar)
-            self.removeRuletoRule(grammar)
+            #self.removeRuleToRule(grammar)
+            self.copyToNewStart(grammar)
 
-
-    def removeRuletoRule(self, grammar):
+    #def removeRuletoRule(self, grammar):
         # S-> S
-
-        self.copyToNewStart(grammar)
+        #self.copyToNewStart(grammar)
 
     def copyToNewStart(self, grammar):
-
-        self.ruleToRuleToTerm(grammar)
-
+        #s0 -> S
+        print("copy new start rule")
+        for key in grammar.keys():
+            if(key == 'S'):
+                terms = grammar.get(key)
+                #print(terms)
+                #print(grammar)
+                grammar['S0'] = terms
+                #print (grammar)
+        #self.ruleToRuleToTerm(grammer)
 
     def ruleToRuleToTerm(self, grammar):
         #print("int rule to rule")
