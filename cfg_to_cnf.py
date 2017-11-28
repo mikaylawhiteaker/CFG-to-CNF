@@ -1,5 +1,8 @@
 import csv
 import re
+import string
+import random
+
 
 class converter():
     """docstring for converter."""
@@ -86,19 +89,37 @@ class converter():
 
 
     def ruleToRuleToTerm(self, grammar):
-        print("int rule to rule")
-        print(grammar)
+        #print("int rule to rule")
+        #print(grammar)
         for key in grammar.keys():
-            print("key: " + key)
+            #print("key: " + key)
             for term in grammar.get(key):
-                print("term: " + term)
+                #print("term: " + term)
                 if len(term) == 1 and term.isupper():
                     if term != key:
                         for t in grammar.get(term):
                             if len(t) == 1 and t.islower():
                                 grammar.get(key).remove(term)
                                 grammar.get(key).append(t)
+        #print(grammar)
+        self.threeOrMoreTerm(grammar)
+
+    def threeOrMoreTerm(self, grammar):
+        print("in threeOrMoreTerm")
         print(grammar)
+        for key in grammar.keys():
+            for term in grammar.get(key):
+                if len(term) >= 3:
+                    newRule = self.getNewRule()
+                    grammar[counter] = term[1:]
+                    first = term[0:1]
+                    grammar.get(key).remove(term)
+                    grammar.get(key).append(first+key)
+
+    def getNewRule(self):
+        char = random.choice(string.letters).toupper()
+          
+
 
 test = converter()
 #test.__init__()
