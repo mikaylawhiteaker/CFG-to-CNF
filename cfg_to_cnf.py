@@ -1,6 +1,8 @@
 import csv
 import re
-
+# ****STEPS FOR DOING GITHUB RIGHT****
+#GIT ADD ., GIT COMMIT, GIT PULL,
+#FIX MERGES, GIT ADD ., GIT COMMIT, GIT PUSH
 class converter():
     """docstring for converter."""
     def __init__(self):
@@ -73,16 +75,24 @@ class converter():
         #print(grammar)
         if( not e_present):
             #print(grammar)
-            #self.removeRuleToRule(grammar)
-            self.copyToNewStart(grammar)
+            self.removeRuletoRule(grammar)
+            #self.copyToNewStart(grammar)
 
-    #def removeRuletoRule(self, grammar):
+    def removeRuletoRule(self, grammar):
         # S-> S
-        #self.copyToNewStart(grammar)
+        #print(grammar)
+        for key in grammar.keys():
+            if (key in grammar.get(key)):
+                #print(key)
+                variables = grammar.get(key)
+                variables.remove(key)
+                #print(grammar)
+
+        self.copyToNewStart(grammar)
 
     def copyToNewStart(self, grammar):
         #s0 -> S
-        print("copy new start rule")
+        #print("copy new start rule")
         for key in grammar.keys():
             if(key == 'S'):
                 terms = grammar.get(key)
