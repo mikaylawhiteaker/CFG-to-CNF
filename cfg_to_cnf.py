@@ -76,22 +76,24 @@ class converter():
         #print(grammar)
         if( not e_present):
             #print(grammar)
-            #self.removeRuleToRule(grammar)
-            self.removeRuleToRule(grammar)
+            self.removeRuletoRule(grammar)
+            #self.copyToNewStart(grammar)
 
-    def removeRuleToRule(self, grammar):
+    def removeRuletoRule(self, grammar):
         # S-> S
-        print("in removeRuleToRule")
-        for key, value in grammar.items():
-            if key in value:
-                print("in if")
-                grammar.get(key).remove(key)
-        print(grammar)
+        #print(grammar)
+        for key in grammar.keys():
+            if (key in grammar.get(key)):
+                #print(key)
+                variables = grammar.get(key)
+                variables.remove(key)
+                #print(grammar)
+
         self.copyToNewStart(grammar)
 
     def copyToNewStart(self, grammar):
         #s0 -> S
-        print("copy new start rule")
+        #print("copy new start rule")
         for key in grammar.keys():
             if(key == 'S'):
                 terms = grammar.get(key)
@@ -102,12 +104,12 @@ class converter():
         self.ruleToRuleToTerm(grammar)
 
     def ruleToRuleToTerm(self, grammar):
-        print("int rule to rule")
-        print(grammar)
+        #print("int rule to rule")
+        #print(grammar)
         for key in grammar.keys():
-            print("key: " + key)
+            #print("key: " + key)
             for term in grammar.get(key):
-                print("term: " + term)
+                #print("term: " + term)
                 if len(term) == 1 and term.isupper():
                     grammar.get(key).remove(term)
                     for t in grammar.get(term):
@@ -148,12 +150,36 @@ class converter():
         if char not in grammar:
             return char
         else:
-            self.getNewRule()
+            self.getNewRule(grammar)
 
+        def removeRuletoTerm(self,grammar):
+            #A -> aB into A -> UB AND U -> a
+            tempTerm = ''
+            newVariable = ''
+            for key in grammar.keys():
+                for term in grammar.get(key):
+                    if len(term) == 2 and (term[0].islower() or term[1].islower()):
+                        if(term[0].lower()):
+                            tempTerm = term[0]
+                            newVariable = 'U' #USE RANDOM LETTER GENERATOR
+                            grammar.get(key).remove(term)
+                            term = term.replace(term[0], newVariable)
+                            grammar.get(key).append(term)
+                            print(grammar)
+                        if(term[1].islower()):
+                            tempTerm = term[1]
+                            newVariable = 'U' #USE RANDOM LETTER GENERATOR
+                            grammar.get(key).remove(term)
+                            term = term.replace(term[1], newVariable)
+                            grammar.get(key).append(term)
+            grammar[newVariable] = [tempTerm]
+            print(grammar)
+            self.ruleToOnlyTerminal(grammar)
 
     def ruleToOnlyTerminal(self, grammar):
         print("in finall function")
         print(grammar)
+
 
 test = converter()
 #test.__init__()
