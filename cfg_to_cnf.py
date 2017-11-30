@@ -1,8 +1,9 @@
 import csv
 import re
-# ****STEPS FOR DOING GITHUB RIGHT****
-#GIT ADD ., GIT COMMIT, GIT PULL,
-#FIX MERGES, GIT ADD ., GIT COMMIT, GIT PUSH
+import string
+import random
+
+
 class converter():
     """docstring for converter."""
     def __init__(self):
@@ -110,35 +111,73 @@ class converter():
             for term in grammar.get(key):
                 #print("term: " + term)
                 if len(term) == 1 and term.isupper():
-                    if term != key:
-                        for t in grammar.get(term):
-                            if len(t) == 1 and t.islower():
-                                grammar.get(key).remove(term)
-                                grammar.get(key).append(t)
+                    grammar.get(key).remove(term)
+                    for t in grammar.get(term):
+                        grammar.get(key).insert(0, t)
         #print(grammar)
-        self.removeRuletoTerm(grammar)
+        self.threeOrMoreTerm(grammar)
 
-    def removeRuletoTerm(self,grammar):
-        # A -> aB into A -> UB AND U -> a
-        tempTerm = ''
-        newVariable = ''
+    def threeOrMoreTerm(self, grammar):
+        print("in threeOrMoreTerm")
+        print(grammar)
+        lessThanThree = True
+        for key, value in grammar.items():
+            for term in value:
+                if(len(term) >= 3):
+                    lessThanThree = False
+                    break
+        if lessThanThree:
+            print("all less than three")
+            self.ruleToOnlyTerminal(grammar)
+        if not lessThanThree:
+            print("split up")
+            self.splitUpterm(grammar)
+            self.threeOrMoreTerm(grammar)
+
+    def splitUpterm(self, grammar):
         for key in grammar.keys():
             for term in grammar.get(key):
-                if len(term) == 2 and (term[0].islower() or term[1].islower()):
-                    if(term[0].lower()):
-                        tempTerm = term[0]
-                        newVariable = 'U' #USE RANDOM LETTER GENERATOR
-                        grammar.get(key).remove(term)
-                        term = term.replace(term[0], newVariable)
-                        grammar.get(key).append(term)
-                        #print(grammar)
-                    if(term[1].islower()):
-                        tempTerm = term[1]
-                        newVariable = 'U' #USE RANDOM LETTER GENERATOR
-                        grammar.get(key).remove(term)
-                        term = term.replace(term[1], newVariable)
-                        grammar.get(key).append(term)
-        grammar[newVariable] = [tempTerm]
+                if len(term) >= 3:
+                    newRule = self.getNewRule(grammar)
+                    grammar[newRule] = [term[1:]]
+                    first = term[0:1]
+                    grammar.get(key).remove(term)
+                    grammar.get(key).append(first+newRule)
+                    return
+
+    def getNewRule(self, grammar):
+        char = random.choice(string.ascii_uppercase)
+        if char not in grammar:
+            return char
+        else:
+            self.getNewRule(grammar)
+
+        def removeRuletoTerm(self,grammar):
+            #A -> aB into A -> UB AND U -> a
+            tempTerm = ''
+            newVariable = ''
+            for key in grammar.keys():
+                for term in grammar.get(key):
+                    if len(term) == 2 and (term[0].islower() or term[1].islower()):
+                        if(term[0].lower()):
+                            tempTerm = term[0]
+                            newVariable = 'U' #USE RANDOM LETTER GENERATOR
+                            grammar.get(key).remove(term)
+                            term = term.replace(term[0], newVariable)
+                            grammar.get(key).append(term)
+                            print(grammar)
+                        if(term[1].islower()):
+                            tempTerm = term[1]
+                            newVariable = 'U' #USE RANDOM LETTER GENERATOR
+                            grammar.get(key).remove(term)
+                            term = term.replace(term[1], newVariable)
+                            grammar.get(key).append(term)
+            grammar[newVariable] = [tempTerm]
+            print(grammar)
+            self.ruleToOnlyTerminal(grammar)
+
+    def ruleToOnlyTerminal(self, grammar):
+        print("in finall function")
         print(grammar)
 
 
