@@ -77,11 +77,17 @@ class converter():
         if( not e_present):
             #print(grammar)
             #self.removeRuleToRule(grammar)
-            self.copyToNewStart(grammar)
+            self.removeRuleToRule(grammar)
 
-    #def removeRuletoRule(self, grammar):
+    def removeRuleToRule(self, grammar):
         # S-> S
-        #self.copyToNewStart(grammar)
+        print("in removeRuleToRule")
+        for key, value in grammar.items():
+            if key in value:
+                print("in if")
+                grammar.get(key).remove(key)
+        print(grammar)
+        self.copyToNewStart(grammar)
 
     def copyToNewStart(self, grammar):
         #s0 -> S
@@ -93,40 +99,61 @@ class converter():
                 #print(grammar)
                 grammar['S0'] = terms
                 #print (grammar)
-        #self.ruleToRuleToTerm(grammer)
+        self.ruleToRuleToTerm(grammar)
 
     def ruleToRuleToTerm(self, grammar):
-        #print("int rule to rule")
-        #print(grammar)
+        print("int rule to rule")
+        print(grammar)
         for key in grammar.keys():
-            #print("key: " + key)
+            print("key: " + key)
             for term in grammar.get(key):
-                #print("term: " + term)
+                print("term: " + term)
                 if len(term) == 1 and term.isupper():
-                    if term != key:
-                        for t in grammar.get(term):
-                            if len(t) == 1 and t.islower():
-                                grammar.get(key).remove(term)
-                                grammar.get(key).append(t)
+                    grammar.get(key).remove(term)
+                    for t in grammar.get(term):
+                        grammar.get(key).insert(0, t)
         #print(grammar)
         self.threeOrMoreTerm(grammar)
 
     def threeOrMoreTerm(self, grammar):
         print("in threeOrMoreTerm")
         print(grammar)
+        lessThanThree = True
+        for key, value in grammar.items():
+            for term in value:
+                if(len(term) >= 3):
+                    lessThanThree = False
+                    break
+        if lessThanThree:
+            print("all less than three")
+            self.ruleToOnlyTerminal(grammar)
+        if not lessThanThree:
+            print("split up")
+            self.splitUpterm(grammar)
+            self.threeOrMoreTerm(grammar)
+
+    def splitUpterm(self, grammar):
         for key in grammar.keys():
             for term in grammar.get(key):
                 if len(term) >= 3:
-                    newRule = self.getNewRule()
-                    grammar[counter] = term[1:]
+                    newRule = self.getNewRule(grammar)
+                    grammar[newRule] = [term[1:]]
                     first = term[0:1]
                     grammar.get(key).remove(term)
-                    grammar.get(key).append(first+key)
+                    grammar.get(key).append(first+newRule)
+                    return
 
-    def getNewRule(self):
-        char = random.choice(string.letters).toupper()
-          
+    def getNewRule(self, grammar):
+        char = random.choice(string.ascii_uppercase)
+        if char not in grammar:
+            return char
+        else:
+            self.getNewRule()
 
+
+    def ruleToOnlyTerminal(self, grammar):
+        print("in finall function")
+        print(grammar)
 
 test = converter()
 #test.__init__()
