@@ -9,7 +9,7 @@ class converter():
     def __init__(self):
         super(converter, self).__init__()
 
-        reader = csv.reader(open('level2.csv'))
+        reader = csv.reader(open('level1.csv'))
         grammar = {}
         for row in reader:
             key = row[0]
@@ -99,7 +99,10 @@ class converter():
                 terms = grammar.get(key)
                 #print(terms)
                 #print(grammar)
-                grammar['S0'] = terms
+                grammar['S0'] = terms[:]
+
+                if('e' in terms):
+                    grammar.get(key).remove('e')
                 #print (grammar)
         self.ruleToRuleToTerm(grammar)
 
@@ -138,12 +141,23 @@ class converter():
         for key in grammar.keys():
             for term in grammar.get(key):
                 if len(term) >= 3:
-                    newRule = self.getNewRule(grammar)
-                    grammar[newRule] = [term[1:]]
                     first = term[0:1]
-                    grammar.get(key).remove(term)
-                    grammar.get(key).append(first+newRule)
+                    if self.checkForRule(grammar, term[1:]) is not None:
+                        newRule = self.checkForRule(grammar, term[1:])
+                        grammar.get(key).remove(term)
+                        grammar.get(key).append(first+newRule)
+                    else:
+                        newRule = self.getNewRule(grammar)
+                        grammar[newRule] = [term[1:]]
+                        grammar.get(key).remove(term)
+                        grammar.get(key).append(first+newRule)
                     return
+
+    def checkForRule(self, grammar, term):
+        for key, values in grammar.items():
+            if len(values) == 1 and term in values:
+                return key
+        return None
 
     def getNewRule(self, grammar):
         char = random.choice(string.ascii_uppercase)
