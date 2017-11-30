@@ -117,7 +117,7 @@ class converter():
                                 grammar.get(key).append(t)
         #print(grammar)
         self.removeRuletoTerm(grammar)
-        
+
     def removeRuletoTerm(self,grammar):
         # A -> aB into A -> UB AND U -> a
         tempTerm = ''
@@ -131,7 +131,7 @@ class converter():
                         grammar.get(key).remove(term)
                         term = term.replace(term[0], newVariable)
                         grammar.get(key).append(term)
-                        print(grammar)
+                        #print(grammar)
                     if(term[1].islower()):
                         tempTerm = term[1]
                         newVariable = 'U' #USE RANDOM LETTER GENERATOR
