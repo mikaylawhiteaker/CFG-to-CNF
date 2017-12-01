@@ -9,7 +9,7 @@ class converter():
     def __init__(self):
         super(converter, self).__init__()
 
-        reader = csv.reader(open('level1.csv'))
+        reader = csv.reader(open('level2.csv'))
         grammar = {}
         for row in reader:
             key = row[0]
@@ -121,8 +121,8 @@ class converter():
         self.threeOrMoreTerm(grammar)
 
     def threeOrMoreTerm(self, grammar):
-        print("in threeOrMoreTerm")
-        print(grammar)
+        #print("in threeOrMoreTerm")
+        #print(grammar)
         lessThanThree = True
         for key, value in grammar.items():
             for term in value:
@@ -130,10 +130,10 @@ class converter():
                     lessThanThree = False
                     break
         if lessThanThree:
-            print("all less than three")
-            self.ruleToOnlyTerminal(grammar)
+            #print("all less than three")
+            self.terminalAndRule(grammar)
         if not lessThanThree:
-            print("split up")
+            #print("split up")
             self.splitUpterm(grammar)
             self.threeOrMoreTerm(grammar)
 
@@ -142,57 +142,72 @@ class converter():
             for term in grammar.get(key):
                 if len(term) >= 3:
                     first = term[0:1]
-                    if self.checkForRule(grammar, term[1:]) is not None:
-                        newRule = self.checkForRule(grammar, term[1:])
-                        grammar.get(key).remove(term)
-                        grammar.get(key).append(first+newRule)
-                    else:
-                        newRule = self.getNewRule(grammar)
-                        grammar[newRule] = [term[1:]]
-                        grammar.get(key).remove(term)
-                        grammar.get(key).append(first+newRule)
+                    newRule = self.getNewRule(grammar, term[1:])
+                    grammar[newRule] = [term[1:]]
+                    grammar.get(key).remove(term)
+                    grammar.get(key).append(first+newRule)
                     return
 
-    def checkForRule(self, grammar, term):
+
+
+    def getNewRule(self, grammar, term):
         for key, values in grammar.items():
             if len(values) == 1 and term in values:
                 return key
-        return None
 
-    def getNewRule(self, grammar):
-        char = random.choice(string.ascii_uppercase)
-        if char not in grammar:
-            return char
+        while True:
+            char = random.choice(string.ascii_uppercase)
+            if char not in grammar:
+                return char
+
+    def terminalAndRule(self, grammar):
+        print("start terminal and rule")
+        flag = False
+        for key in grammar.keys():
+            for term in grammar.get(key):
+                if len(term) == 2 and (term[0].islower() or term[1].islower()):
+                    flag = True
+                    break
+        if flag:
+            print("found terminals")
+            self.removeRuletoTerm(grammar)
+            self.terminalAndRule(grammar)
         else:
-            self.getNewRule(grammar)
+            print("no more terminals found")
+            
+    def removeRuletoTerm(self,grammar):
+        #A -> aB into A -> UB AND U -> a
+        print("in removeRuletoTerm")
+        # tempTerm = ''
+        # newVariable = ''
+        for key in grammar.keys():
+            for term in grammar.get(key):
+                if len(term) == 2 and (term[0].islower() or term[1].islower()):
+                    if(term[0].islower()):
+                        print("in the first if")
+                        tempTerm = term[0]
+                        print("tempTerm: "+ tempTerm)
+                        newVariable = self.getNewRule(grammar, tempTerm) #USE RANDOM LETTER GENERATOR
+                        print("newVariable: " + newVariable)
+                        grammar.get(key).remove(term)
+                        term = term.replace(term[0], newVariable)
+                        print("term to add: " + term)
+                        grammar.get(key).append(term)
+                        grammar[newVariable] = [tempTerm]
+                        print(grammar)
+                        return
+                    if(term[1].islower()):
+                        tempTerm = term[1]
+                        newVariable = self.getNewRule(grammar, tempTerm) #USE RANDOM LETTER GENERATOR
+                        grammar.get(key).remove(term)
+                        term = term.replace(term[1], newVariable)
+                        grammar.get(key).append(term)
+                        grammar[newVariable] = [tempTerm]
+                        print(grammar)
+                        return
+        #self.ruleToOnlyTerminal(grammar)
 
-        def removeRuletoTerm(self,grammar):
-            #A -> aB into A -> UB AND U -> a
-            tempTerm = ''
-            newVariable = ''
-            for key in grammar.keys():
-                for term in grammar.get(key):
-                    if len(term) == 2 and (term[0].islower() or term[1].islower()):
-                        if(term[0].lower()):
-                            tempTerm = term[0]
-                            newVariable = 'U' #USE RANDOM LETTER GENERATOR
-                            grammar.get(key).remove(term)
-                            term = term.replace(term[0], newVariable)
-                            grammar.get(key).append(term)
-                            print(grammar)
-                        if(term[1].islower()):
-                            tempTerm = term[1]
-                            newVariable = 'U' #USE RANDOM LETTER GENERATOR
-                            grammar.get(key).remove(term)
-                            term = term.replace(term[1], newVariable)
-                            grammar.get(key).append(term)
-            grammar[newVariable] = [tempTerm]
-            print(grammar)
-            self.ruleToOnlyTerminal(grammar)
 
-    def ruleToOnlyTerminal(self, grammar):
-        print("in finall function")
-        print(grammar)
 
 
 test = converter()
