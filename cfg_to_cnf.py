@@ -139,6 +139,7 @@ class converter():
             for term in grammar.get(key):
                 if len(term) >= 3:
                     newRule = self.getNewRule(grammar)
+                    #print(newRule)
                     grammar[newRule] = [term[1:]]
                     first = term[0:1]
                     grammar.get(key).remove(term)
@@ -147,10 +148,14 @@ class converter():
 
     def getNewRule(self, grammar):
         char = random.choice(string.ascii_uppercase)
+        #print("char:")
+        #print(char)
         if char not in grammar:
+            #print("HEY!:" +char)
             return char
         else:
             self.getNewRule(grammar)
+            #char = random.choice(string.ascii_uppercase)
 
         def removeRuletoTerm(self,grammar):
             #A -> aB into A -> UB AND U -> a
