@@ -174,7 +174,8 @@ class converter():
             self.terminalAndRule(grammar)
         else:
             print("no more terminals found")
-            
+            self.outputFile(grammar)
+
     def removeRuletoTerm(self,grammar):
         #A -> aB into A -> UB AND U -> a
         print("in removeRuletoTerm")
@@ -205,7 +206,15 @@ class converter():
                         grammar[newVariable] = [tempTerm]
                         print(grammar)
                         return
-        #self.ruleToOnlyTerminal(grammar)
+
+
+
+    def outputFile(self, grammar):
+        print("what")
+        with open('test.csv', 'w') as f:
+            writer = csv.writer(f)
+            for row in grammar.items():
+                writer.writerow(row)
 
 
 
